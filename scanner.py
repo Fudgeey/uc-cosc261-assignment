@@ -38,7 +38,6 @@ class Scanner:
         while current_char.isspace():
             self.current_char_index += 1
             current_char = self.input_string[self.current_char_index]
-            print('test')
 
     def no_token(self):
         """Stop execution if the input cannot be matched to a token."""
@@ -59,10 +58,13 @@ class Scanner:
         token, longest = None, ''
         for (t, r) in Token.token_regexp:
             match = re.match(r, self.input_string[self.current_char_index:])
+              
             if match and match.end() > len(longest):
                 token, longest = t, match.group()
-            else:
-                self.no_token()
+        
+        if token == None:
+            self.no_token()
+            
         # consume the token by moving the index to the end of the matched part
         self.current_char_index += len(longest)
         return (token, longest)
@@ -89,67 +91,73 @@ class Scanner:
            token but a pair of the token and its value is returned.
         """
 
-        if self.next_token in expected_tokens:
+        if self.next_token[0] in expected_tokens:
+            self.next_token = self.get_token()
             return self.next_token
         else:
             self.unexpected_token(self.next_token, expected_tokens)
 
-        raise Exception('consume not implemented')
-
 
 class Token:
     # The following enumerates all tokens.
-    DO = 'DO'
-    ELSE = 'ELSE'
-    END = 'END'
-    IF = 'IF'
-    THEN = 'THEN'
+    DO    = 'DO'
+    ELSE  = 'ELSE'
+    END   = 'END'
+    IF    = 'IF'
+    THEN  = 'THEN'
     WHILE = 'WHILE'
-    SEM = 'SEM'
-    BEC = 'BEC'
-    LESS = 'LESS'
-    EQ = 'EQ'
-    GRTR = 'GRTR'
-    LEQ = 'LEQ'
-    NEQ = 'NEQ'
-    GEQ = 'GEQ'
-    ADD = 'ADD'
-    SUB = 'SUB'
-    MUL = 'MUL'
-    DIV = 'DIV'
-    LPAR = 'LPAR'
-    RPAR = 'RPAR'
-    NUM = 'NUM'
-    ID = 'ID'
+    SEM   = 'SEM'
+    BEC   = 'BEC'
+    LESS  = 'LESS'
+    EQ    = 'EQ'
+    GRTR  = 'GRTR'
+    LEQ   = 'LEQ'
+    NEQ   = 'NEQ'
+    GEQ   = 'GEQ'
+    ADD   = 'ADD'
+    SUB   = 'SUB'
+    MUL   = 'MUL'
+    DIV   = 'DIV'
+    LPAR  = 'LPAR'
+    RPAR  = 'RPAR'
+    NUM   = 'NUM'
+    ID    = 'ID'
+    READ = 'READ'
+    WRITE = 'WRITE'
 
     # The following list gives the regular expression to match a token.
     # The order in the list matters for mimicking Flex behaviour.
     # Longer matches are preferred over shorter ones.
     # For same-length matches, the first in the list is preferred.
     token_regexp = [
-        (DO, 'do'),
-        (ELSE, 'else'),
-        (END, 'end'),
-        (IF, 'if'),
-        (THEN, 'then'),
+        (DO,    'do'),
+        (ELSE,  'else'),
+        (END,   'end'),
+        (IF,    'if'),
+        (THEN,  'then'),
         (WHILE, 'while'),
-        (SEM, ';'),
-        (BEC, ':='),
-        (LESS, '<'),
-        (EQ, '='),
-        (GRTR, '>'),
-        (LEQ, '<='),
-        (GEQ, '>='),
-        (ADD, '\\+'),  # + is special in regular expressions
-        (SUB, '-'),
-        (LPAR, '\\('),  # ( is special in regular expressions
-        (RPAR, '\\)'),  # ) is special in regular expressions
-        (ID, '[a-z]+'),
+        (SEM,   ';'),
+        (BEC,   ':='),
+        (LESS,  '<'),
+        (EQ,    '='),
+        (GRTR,  '>'),
+        (LEQ,   '<='),
+        (NEQ, '!='),
+        (GEQ,   '>='),
+        (ADD,   '\\+'), # + is special in regular expressions
+        (SUB,   '-'),
+        (MUL, '\\*'),
+        (DIV, '/'),
+        (LPAR,  '\\('), # ( is special in regular expressions
+        (RPAR,  '\\)'), # ) is special in regular expressions
+        (NUM, '[0-9]'),
+        (ID,    '[a-z]+'),
+        (READ, 'read'),
+        (WRITE, 'write'),
     ]
 
 
 # Initialise scanner.
-
 scanner = Scanner(sys.stdin)
 
 # Show all tokens in the input.
