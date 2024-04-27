@@ -114,6 +114,8 @@ class Token:
     IF = 'IF'
     THEN = 'THEN'
     WHILE = 'WHILE'
+    READ = 'READ'
+    WRITE = 'WRITE'
     SEM = 'SEM'
     BEC = 'BEC'
     LESS = 'LESS'
@@ -130,8 +132,6 @@ class Token:
     RPAR = 'RPAR'
     NUM = 'NUM'
     ID = 'ID'
-    READ = 'READ'
-    WRITE = 'WRITE'
 
     # The following list gives the regular expression to match a token.
     # The order in the list matters for mimicking Flex behaviour.
@@ -144,6 +144,8 @@ class Token:
         (IF, 'if'),
         (THEN, 'then'),
         (WHILE, 'while'),
+        (READ, 'read'),
+        (WRITE, 'write'),
         (SEM, ';'),
         (BEC, ':='),
         (LESS, '<'),
@@ -158,10 +160,8 @@ class Token:
         (DIV, '/'),
         (LPAR, '\\('),  # ( is special in regular expressions
         (RPAR, '\\)'),  # ) is special in regular expressions
-        (NUM, '[0-9]'),
+        (NUM, '[1-9][0-9]*'),  # is all zeros valid? e.g. 0+|[1-9][0-9]*
         (ID, '[a-z]+'),
-        (READ, 'read'),
-        (WRITE, 'write'),
     ]
 
 
