@@ -160,7 +160,7 @@ class Token:
         (DIV, '/'),
         (LPAR, '\\('),  # ( is special in regular expressions
         (RPAR, '\\)'),  # ) is special in regular expressions
-        (NUM, '[1-9][0-9]*'),  # is all zeros valid? e.g. 0+|[1-9][0-9]*
+        (NUM, '0+|[1-9][0-9]*'),  # is all zeros valid? e.g. 0+|[1-9][0-9]*
         (ID, '[a-z]+'),
     ]
 
