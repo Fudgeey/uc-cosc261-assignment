@@ -1,0 +1,14 @@
+a:=4;
+b := 2;
+c := 5;
+
+if a > b then
+    write a;
+else
+    write b;
+
+while b < c then
+    write b;
+    b := b + 1;
+
+end

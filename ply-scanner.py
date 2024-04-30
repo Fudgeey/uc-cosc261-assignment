@@ -97,6 +97,10 @@ t_RPAR = r'\)'
 
 ### add code for inequality, multiplication, division and numbers ###
 
+def t_NUM(t):
+    r'0+|[1-9][0-9]*'
+    return t
+
 def t_ID(t):
     r'[a-z]+'
     ### add code for reserved words using the dictionary above ###

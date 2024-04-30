@@ -160,7 +160,7 @@ class Token:
         (DIV, '/'),
         (LPAR, '\\('),  # ( is special in regular expressions
         (RPAR, '\\)'),  # ) is special in regular expressions
-        (NUM, '0+|[1-9][0-9]*'),  # is all zeros valid? e.g. 0+|[1-9][0-9]*
+        (NUM, '0+|[1-9][0-9]*'),  # is all zeros valid? is 0005 valid?
         (ID, '[a-z]+'),
     ]
 
@@ -177,8 +177,9 @@ while token != None:
     if token in [Token.NUM, Token.ID]:
         token, value = scanner.consume(token)
         print(token, value)
+        # print(token)
     else:
-        print(scanner.consume(token))
+        print(scanner.consume(token)[0])
 
     token = scanner.lookahead()
     # print(f"Token 2: {token}")
