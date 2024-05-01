@@ -1,0 +1,13 @@
+a := 2;
+b := 10;
+if a > 5 do
+    a := a + 5;
+
+    if a > b do
+        write a;
+    else
+        write b;
+    end;
+else
+    write a;
+end 

@@ -35,22 +35,10 @@ class Scanner:
 
         current_char = self.input_string[self.current_char_index]
 
-        # if len(self.input_string) > self.current_char_index + 1:
-        #     # while current_char.isspace():
-        #     while current_char in [' ', '\t', '\n']:
-        #         self.current_char_index += 1
-        #         print(f"{self.current_char_index} / {len(self.input_string)}")
-        #         current_char = self.input_string[self.current_char_index]
-
-        # while current_char.isspace():
-
-        while current_char.isspace():
-            if len(self.input_string) > self.current_char_index + 1:
+        if len(self.input_string) > self.current_char_index + 1:
+            while current_char.isspace():
                 self.current_char_index += 1
-                # print(f"{self.current_char_index} / {len(self.input_string)}")
                 current_char = self.input_string[self.current_char_index]
-            else:
-                break
 
     def no_token(self):
         """Stop execution if the input cannot be matched to a token."""
@@ -75,8 +63,10 @@ class Scanner:
             if match and match.end() > len(longest):
                 token, longest = t, match.group()
 
-        # if token is None and len(self.input_string) - 1 != self.current_char_index:
-        if token is None and not self.input_string[self.current_char_index].isspace():
+        # print(f"Length: {len(self.input_string)}")
+        # print(f"Char: {self.current_char_index}")
+
+        if token is None and len(self.input_string) - 1 != self.current_char_index:
             self.no_token()
 
         # consume the token by moving the index to the end of the matched part
@@ -105,15 +95,13 @@ class Scanner:
            token but a pair of the token and its value is returned.
         """
 
-        token, value = self.next_token
-
-        if token in expected_tokens:
+        # print(f"Next Token: {self.next_token[0]}")
+        # print(f"Expected Tokens: {expected_tokens}")
+        if self.next_token[0] in expected_tokens:
+            # print(self.next_token)
+            return_token = self.next_token
             self.next_token = self.get_token()
-
-            if token in [Token.NUM, Token.ID]:
-                return (token, value)
-            else:
-                return token
+            return return_token
         else:
             self.unexpected_token(self.next_token, expected_tokens)
 
@@ -191,7 +179,7 @@ while token != None:
         print(token, value)
         # print(token)
     else:
-        print(scanner.consume(token))
+        print(scanner.consume(token)[0])
 
     token = scanner.lookahead()
     # print(f"Token 2: {token}")

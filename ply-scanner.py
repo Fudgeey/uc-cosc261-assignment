@@ -103,6 +103,10 @@ def t_NUM(t):
 
 def t_ID(t):
     r'[a-z]+'
+
+    if t.value in reserved.keys():
+        t.type = reserved[t.value]
+
     ### add code for reserved words using the dictionary above ###
     return t
 
