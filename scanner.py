@@ -33,21 +33,14 @@ class Scanner:
            next non-white-space character.
         """
 
+        if self.current_char_index >= len(self.input_string):
+            return
+
         current_char = self.input_string[self.current_char_index]
-
-        # if len(self.input_string) > self.current_char_index + 1:
-        #     # while current_char.isspace():
-        #     while current_char in [' ', '\t', '\n']:
-        #         self.current_char_index += 1
-        #         print(f"{self.current_char_index} / {len(self.input_string)}")
-        #         current_char = self.input_string[self.current_char_index]
-
-        # while current_char.isspace():
 
         while current_char.isspace():
             if len(self.input_string) > self.current_char_index + 1:
                 self.current_char_index += 1
-                # print(f"{self.current_char_index} / {len(self.input_string)}")
                 current_char = self.input_string[self.current_char_index]
             else:
                 break
@@ -75,8 +68,16 @@ class Scanner:
             if match and match.end() > len(longest):
                 token, longest = t, match.group()
 
-        # if token is None and len(self.input_string) - 1 != self.current_char_index:
-        if token is None and not self.input_string[self.current_char_index].isspace():
+        # if len(self.input_string) == self.current_char_index:
+        #     return None
+
+        
+        # if token is None and not self.input_string[self.current_char_index].isspace():
+            # self.no_token()
+
+        # if token is None and not self.input_string[self.current_char_index].isspace():
+        # print(f"{token} {self.input_string[self.current_char_index:]} {self.current_char_index}")
+        if token is None and self.current_char_index + 1 < len(self.input_string):
             self.no_token()
 
         # consume the token by moving the index to the end of the matched part
@@ -184,14 +185,10 @@ scanner = Scanner(sys.stdin)
 
 token = scanner.lookahead()
 while token != None:
-    # print(f"Token 1: {token}")
-
     if token in [Token.NUM, Token.ID]:
         token, value = scanner.consume(token)
         print(token, value)
-        # print(token)
     else:
         print(scanner.consume(token))
 
     token = scanner.lookahead()
-    # print(f"Token 2: {token}")
