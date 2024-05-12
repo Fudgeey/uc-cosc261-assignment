@@ -3,12 +3,13 @@ b := 2;
 c := 5;
 
 if a > b then
-    write a;
+    write a
 else
-    write b;
+    write b
+end;
 
-while b < c then
+while b < c do
     write b;
-    b := b + 1;
+    b := b + 1
 
 end

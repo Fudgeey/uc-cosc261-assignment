@@ -1,0 +1,8 @@
+z := 2;
+if 3 >= 3 then
+  write z
+else
+  z := 0;
+  write z
+end;
+write z
