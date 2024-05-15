@@ -476,7 +476,7 @@ class Boolean_Expression_AST:
         result = ""
 
         for term in self.terms:
-            result += term.true_code(label)
+            result += term.code(label)
 
         return result
 
@@ -485,7 +485,7 @@ class Boolean_Expression_AST:
         result = ""
 
         for term in self.terms:
-            result += term.true_code(l1)
+            result += term.code(l1)
 
         result += f"goto {label}\n{l1}:\n"
         return result
@@ -506,24 +506,15 @@ class Boolean_Term_AST:
 
         return output
 
-    def true_code(self, label):
+    def code(self, label):
         l1 = label_generator.next()
         result = ""
 
         for factor in self.factors:
-            result += factor.false_code(l1)
+            result += factor.true_code(l1)
 
         result += f"goto {label}\n{l1}:\n"
         return result
-
-    def false_code(self, label):
-        result = ""
-
-        for factor in self.factors:
-            result += factor.false_code(label)
-
-        return result
-
 
 class Boolean_Factor_AST:
     def __init__(self, factor):
@@ -667,7 +658,7 @@ def boolean_expression():
 
     while scanner.lookahead() == Token.OR:
         scanner.consume(Token.OR)
-        term = boolean_expression()
+        term = boolean_term()
         terms.append(term)
 
     return Boolean_Expression_AST(terms)

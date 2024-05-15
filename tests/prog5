@@ -3,8 +3,11 @@ a := 1;
 while a < 10 do
     a := a + 1
 end;
-
+write a;
 b := 2;
 a := a * b;
 b := b / a;
-a := a - b
+write b;
+a := a - b;
+
+write a
