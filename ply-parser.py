@@ -1,8 +1,8 @@
 """
 PLY parser template for COSC261 Assignment
-    ## WARNING ## Your code should be derived from this template
-                  by modifying only the parts mentioned in the requirements;
-                  other changes are at your own risk.
+    ## WARNING ## Your code should be derived from this template 
+                  by modifying only the parts mentioned in the requirements; 
+                  other changes are at your own risk. 
                   Feel free, however, to experiment during the development.
 
 This program uses PLY (Python Lex-Yacc). Documentation for PLY is

@@ -1,13 +1,12 @@
 a := 2;
 b := 10;
-if a > 5 do
+
+if a > 5 then
     a := a + 5;
 
-    if a > b do
-        write a;
+    if a > b then
+        write a
     else
-        write b;
-    end;
-else
-    write a;
+        write b
+    end
 end 

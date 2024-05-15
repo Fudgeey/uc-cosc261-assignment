@@ -320,12 +320,11 @@ class If_Else_AST:
         l1 = label_generator.next()
         l2 = label_generator.next()
 
-        return self.condition.true_code(l1) + \
-            self.then_else.code() + \
-            'goto ' + l2 + '\n' + \
-            l1 + ':\n' + \
+        return self.condition.false_code(l1) + \
             self.then_if.code() + \
             'goto ' + l2 + '\n' + \
+            l1 + ':\n' + \
+            self.then_else.code() + \
             l2 + ':\n'
 
 
@@ -459,24 +458,89 @@ class Expression_AST:
 
 
 class Boolean_Expression_AST:
-    def __init__(self, left, op, right):
-        self.left = left
-        self.op = op
-        self.right = right
+    def __init__(self, terms):
+        self.terms = terms
 
     def __repr__(self):
-        return '(' + repr(self.left) + self.op + repr(self.right) + ')'
+        return "Boolean_Expression_AST"
 
     def indented(self, level):
-        return indent(self.op, level) + \
-            self.left.indented(level + 1) + \
-            self.right.indented(level + 1)
+        output = ""
 
-    def code(self):
-        op = {'+': 'iadd', '-': 'isub', '*': 'imul', '/': 'idiv'}
-        return self.left.code() + \
-            self.right.code() + \
-            op[self.op] + '\n'
+        for term in self.terms:
+            output += term.indented(level)
+
+        return output
+
+    def true_code(self, label):
+        result = ""
+
+        for term in self.terms:
+            result += term.true_code(label)
+
+        return result
+
+    def false_code(self, label):
+        l1 = label_generator.next()
+        result = ""
+
+        for term in self.terms:
+            result += term.true_code(l1)
+
+        result += f"goto {label}\n{l1}:\n"
+        return result
+
+
+class Boolean_Term_AST:
+    def __init__(self, factors):
+        self.factors = factors
+
+    def __repr__(self):
+        return "Boolean_Term_AST"
+
+    def indented(self, level):
+        output = ""
+
+        for factor in self.factors:
+            output += factor.indented(level)
+
+        return output
+
+    def true_code(self, label):
+        l1 = label_generator.next()
+        result = ""
+
+        for factor in self.factors:
+            result += factor.false_code(l1)
+
+        result += f"goto {label}\n{l1}:\n"
+        return result
+
+    def false_code(self, label):
+        result = ""
+
+        for factor in self.factors:
+            result += factor.false_code(label)
+
+        return result
+
+
+class Boolean_Factor_AST:
+    def __init__(self, factor):
+        self.factor = factor
+
+    def __repr__(self):
+        return f"({self.factor})"
+
+    def indented(self, level):
+        if type(self.factor) is Comparison_AST:
+            return self.factor.indented(level)
+
+    def true_code(self, label):
+        return self.factor.false_code(label)
+
+    def false_code(self, label):
+        return self.factor.true_code(label)
 
 
 class Number_AST:
@@ -599,31 +663,35 @@ def comparison():
 
 
 def boolean_expression():
-    result = boolean_term()
+    terms = [boolean_term()]
+
     while scanner.lookahead() == Token.OR:
-        op = scanner.consume(Token.OR)
-        tree = boolean_term()
-        result = Boolean_Expression_AST(result, boolean_operator[op], tree)
-    return result
+        scanner.consume(Token.OR)
+        term = boolean_expression()
+        terms.append(term)
+
+    return Boolean_Expression_AST(terms)
 
 
 def boolean_term():
-    result = boolean_factor()
+    factors = [boolean_factor()]
+
     while scanner.lookahead() == Token.AND:
-        op = scanner.consume(Token.AND)
-        tree = boolean_factor()
-        result = Boolean_Expression_AST(result, boolean_operator[op], tree)
-    return result
+        scanner.consume(Token.AND)
+        factor = boolean_factor()
+        factors.append(factor)
+
+    return Boolean_Term_AST(factors)
 
 
 def boolean_factor():
     if scanner.lookahead() == Token.NOT:
         scanner.consume(Token.NOT)
         result = boolean_factor()
-        return result
+        return Boolean_Factor_AST(result)
     else:
         result = comparison()
-        return result
+        return Boolean_Factor_AST(result)
 
 
 def expression():
